@@ -1,6 +1,6 @@
 FROM python:3.10-alpine
 
-# TODO: Run as non-root user
+# TODO: Decide whether to run as non-root user or not
 # https://medium.com/@DahlitzF/run-python-applications-as-non-root-user-in-docker-containers-by-example-cba46a0ff384
 
 # Install the automx2 package, the application server gunicorn and the template engine Jinja2
