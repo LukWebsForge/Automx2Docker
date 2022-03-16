@@ -1,4 +1,4 @@
-FROM python:3.10-alpine
+FROM python:3.10-slim
 
 # TODO: Decide whether to run as non-root user or not
 # https://medium.com/@DahlitzF/run-python-applications-as-non-root-user-in-docker-containers-by-example-cba46a0ff384
