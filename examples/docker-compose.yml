@@ -1,0 +1,54 @@
+# TODO: Replace example-one.com and example-two.com with your domain(s)
+services:
+  traefik:
+    image: traefik:v2.6
+    restart: unless-stopped
+    command:
+      - "--providers.docker"
+      - "--providers.docker.exposedbydefault=false"
+
+      - "--entryPoints.web.address=:80"
+
+      # Uncomment the following lines and replace the domains to enable HTTPS
+      #  - "--entryPoints.web.http.redirections.entrypoint.to=websecure"
+      #  - "--entryPoints.web.http.redirections.entrypoint.scheme=https"
+
+      # - "--entryPoints.websecure.address=:443"
+      # - "--entryPoints.websecure.http.tls=true"
+      # - "--entryPoints.websecure.http.tls.certResolver=myresolver"
+      # - "--entryPoints.websecure.http.tls.domains[0].main=example-one.com"
+      # - "--entryPoints.websecure.http.tls.domains[0].sans=autoconfig.example-one.com,autodiscovery.example-one.com"
+     # - "--entryPoints.websecure.http.tls.domains[1].main=example-two.com"
+      # - "--entryPoints.websecure.http.tls.domains[1].sans=autoconfig.example-two.com,autodiscovery.example-two.com"
+
+      # - "--certificatesresolvers.myresolver.acme.httpchallenge=true"
+      # - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+    ports:
+      - "80:80"
+      # - "443:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+  autoconfig:
+    build: ..
+    restart: unless-stopped
+    environment:
+      PROXY_COUNT: '1'
+      PROVIDER_NAME: 'Example Mail'
+      PROVIDER_SHORTNAME: 'Example'
+      DOMAINS: 'example-one.com,example-two.com'
+      # IMAP
+      IMAP_HOST: 'imap.example-one.com'
+      IMAP_PORT: '993'
+      IMAP_SOCKET: 'SSL'
+      # SMTP
+      SMTP_HOST: 'smtp.example-one.com'
+      SMTP_PORT: '465'
+      SMTP_SOCKET: 'SSL'
+    labels:
+      - "traefik.enable=true"
+      # Paths: https://github.com/rseichter/automx2/blob/master/automx2/server.py
+      # It is important that the /initdb/ cannot be accessed from the outside
+      - "traefik.http.routers.autoconfig.rule=
+      HeadersRegexp(`{subdomain:(autoconfig|autodiscovery)}.{domain:(example-one|example-two)}.com`) &&
+      Path(`/mobileconfig/`, `/mail/config-v1.1.xml`, `/AutoDiscover/AutoDiscover.xml`, `/autodiscover/autodiscover.xml`)"

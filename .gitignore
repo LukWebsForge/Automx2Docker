@@ -1,0 +1,6 @@
+# PyCharm files
+.idea
+
+# Pipfiles utilized for local development
+Pipfile
+Pipfile.lock
