@@ -26,7 +26,9 @@ automx2docker with docker-compose. As a proxy server [traefik](https://doc.traef
       SMTP_SOCKET: 'SSL'
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.autoconfig.rule=HeadersRegexp(`{subdomain:(autoconfig|autodiscovery)}.{domain:(sky-mail|sky-post)}.com`) && Path(`/mobileconfig/`, `/mail/config-v1.1.xml`, `/AutoDiscover/AutoDiscover.xml`, `/autodiscover/autodiscover.xml`)"
+      - "traefik.http.routers.autoconfig.rule=
+      HeadersRegexp(`{subdomain:(autoconfig|autodiscovery)}.{domain:(sky-mail|sky-post)}.com`) && 
+      Path(`/mobileconfig/`, `/mail/config-v1.1.xml`, `/AutoDiscover/AutoDiscover.xml`, `/autodiscover/autodiscover.xml`)"
 ```
 
 ## Configuration
