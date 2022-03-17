@@ -50,5 +50,5 @@ services:
       # Paths: https://github.com/rseichter/automx2/blob/master/automx2/server.py
       # It is important that the /initdb/ cannot be accessed from the outside
       - "traefik.http.routers.autoconfig.rule=
-      HeadersRegexp(`{subdomain:(autoconfig|autodiscovery)}.{domain:(example-one|example-two)}.com`) &&
+      HeadersRegexp(`{subdomain:(autoconfig|autodiscover)}.{domain:(example-one|example-two)}.com`) &&
       Path(`/mobileconfig/`, `/mail/config-v1.1.xml`, `/AutoDiscover/AutoDiscover.xml`, `/autodiscover/autodiscover.xml`)"
