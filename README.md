@@ -1,12 +1,12 @@
-# automx2-docker
+# automx2docker
 
 The python package [automx2](https://github.com/rseichter/automx2) helps users to simplify the configuration of their
 email clients. It is packaged as a Docker image for an effortless setup process.
 
 ## Usage
 
-The automx2-docker image can be set up with the orchestrator of your choice. Here's an example of how to use
-automx2-docker with docker-compose. As a proxy server [traefik](https://doc.traefik.io/traefik/) is utilized.
+The automx2docker image can be set up with the orchestrator of your choice. Here's an example of how to use
+automx2docker with docker-compose. As a proxy server [traefik](https://doc.traefik.io/traefik/) is utilized.
 
 ```yaml
   autoconfig:
@@ -63,7 +63,7 @@ files [`contrib/sqlite-generate.sh`](https://github.com/rseichter/automx2/blob/m
 
 ## Proxy
 
-You should put a proxy server in front of the automx2-docker container.
+You should put a proxy server in front of the automx2docker container.
 
 The proxy server should route the subdomains `autoconfig` and `autodiscover` to the container. Furthermore, it should
 block the path `/initdb/` to prevent database changes from outside.
