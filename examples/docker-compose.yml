@@ -30,7 +30,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
 
   autoconfig:
-    build: ..
+    image: ghcr.io/lukwebsforge/automx2docker:latest
     restart: unless-stopped
     environment:
       PROXY_COUNT: '1'

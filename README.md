@@ -1,7 +1,33 @@
 # automx2-docker
 
-The python package [automx2](https://github.com/rseichter/automx2) helps users to simplify email configuration in their
-mail clients. The functionality of the package can be used with Docker.
+The python package [automx2](https://github.com/rseichter/automx2) helps users to simplify the configuration of their
+email clients. It is packaged as a Docker image for an effortless setup process.
+
+## Usage
+
+The automx2-docker image can be set up with the orchestrator of your choice. Here's an example of how to use
+automx2-docker with docker-compose. As a proxy server [traefik](https://doc.traefik.io/traefik/) is utilized.
+
+```yaml
+  autoconfig:
+    image: ghcr.io/lukwebsforge/automx2docker:latest
+    environment:
+      PROXY_COUNT: '1'
+      PROVIDER_NAME: 'Sky Mail Ltd.'
+      PROVIDER_SHORTNAME: 'Sky Mail'
+      DOMAINS: 'sky-mail.com,sky-post.com'
+      # IMAP
+      IMAP_HOST: 'imap.sky-mail.com'
+      IMAP_PORT: '993'
+      IMAP_SOCKET: 'SSL'
+      # SMTP
+      SMTP_HOST: 'smtp.sky-mail.com'
+      SMTP_PORT: '465'
+      SMTP_SOCKET: 'SSL'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.autoconfig.rule=HeadersRegexp(`{subdomain:(autoconfig|autodiscovery)}.{domain:(sky-mail|sky-post)}.com`) && Path(`/mobileconfig/`, `/mail/config-v1.1.xml`, `/AutoDiscover/AutoDiscover.xml`, `/autodiscover/autodiscover.xml`)"
+```
 
 ## Configuration
 
@@ -26,23 +52,24 @@ project [autodiscover-email-settings](https://github.com/Monogramm/autodiscover-
 
 `*` Not required if a custom SQL script is set.
 
-If environment variables are not powerful enough, it is also possible to configure automx2 via a custom SQL script. The
-script has be mounted at the path `/data/custom.sql`. In this case the environment variable `PROXY_COUNT` only has to be
-set. The values of all other environment variables are ignored.
+If environment variables are not powerful enough, it is also possible to configure automx2 using a custom SQL script.
+The script has be mounted at the path `/data/custom.sql`. In this case only the environment variable `PROXY_COUNT` is
+required. The values of all other environment variables are ignored.
 
 The custom SQL script can be utilized for enabling [LDAP support](https://rseichter.github.io/automx2/#ldap). To
-understand all available options, you have to take a look at the code. The
+understand all available options, you have to take a look at the code of automx2. The
 files [`contrib/sqlite-generate.sh`](https://github.com/rseichter/automx2/blob/master/contrib/sqlite-generate.sh) and
 [`automx2/model.py`](https://github.com/rseichter/automx2/blob/master/automx2/model.py) are good starting points.
 
 ## Proxy
 
-You should put a proxy server in front of the automx2 container.
+You should put a proxy server in front of the automx2-docker container.
 
 The proxy server should route the subdomains `autoconfig` and `autodiscover` to the container. Furthermore, it should
-block the access to the path `/initdb/` to prevent database changes from outside.
+block the path `/initdb/` to prevent database changes from outside.
 
-Example configurations can be found in this repository and on the automx2 website:
+Example configurations can be found in this repository and on the automx2 website. They may have to be adapted to your
+system.
 
 * [traefik](examples/docker-compose.yml)
 * [NGINX](https://rseichter.github.io/automx2/#nginx)
